@@ -5,7 +5,17 @@ import { NextResponse } from "next/server";
 import { prisma } from "./prisma/db";
 export const authConfig = {
     adapter:PrismaAdapter(prisma),
-    providers:[GitHub],
+    providers:[GitHub({
+        profile(profile){
+            return {
+                role:profile.role?? "user",
+                id:String(profile.id),
+                email:profile.email,
+                image:profile.avatar_url,
+                name:profile.name,
+            }
+        }
+    })],
     pages:{
         signIn:"/login",
     },
@@ -23,7 +33,17 @@ export const authConfig = {
                 return NextResponse.redirect(new URL("/",nextUrl))
             }
             return true;
+        },
+        jwt({token,user}){
+            //@ts-ignore
+            if(user) token.role = user.role;
+            return token;
+        },
+        session({session,token}){
+            //@ts-ignore
+            session.user.role = token.role
+            return session;
         }
-    }
+    },
 
 } satisfies NextAuthConfig

@@ -3,6 +3,9 @@ import { useFormContext } from "@/context/FormContext"
 import { useFieldArray, useForm } from "react-hook-form"
 import Input from "./Input"
 import { TrashIcon } from "@heroicons/react/24/outline"
+import { useState } from "react"
+import { updateUser } from "@/lib/actions/actions"
+import toast from "react-hot-toast"
 
 interface FormValues {
     experiences: {
@@ -15,6 +18,7 @@ interface FormValues {
 }
 
 const Experience = () => {
+    const [loading,setLoading] = useState(false);
     const context = useFormContext()
     const { register, handleSubmit, control } = useForm<FormValues>({
         defaultValues: context?.formData
@@ -23,9 +27,21 @@ const Experience = () => {
         name: "experiences",
         control,
     })
-    const handleFormSubmit = (data: FormValues) => {
-        context?.handleFormData(data)
-        context?.handleNextStep()
+    const handleFormSubmit = async (data: FormValues) => {
+      try {
+
+        setLoading(true)
+        const res = await updateUser(data);
+        if(res?.status === "success"){
+            toast.success(res.message);
+        } else{
+            toast.error(res?.message!);
+        }
+        
+      } catch (error) {}
+      finally{
+        setLoading(false);
+      }
     };
 
     return (
@@ -55,7 +71,7 @@ const Experience = () => {
             })}
             <div className="flex justify-between items-center max-w-4xl mt-40">
                 <button onClick={() => context?.handlePreviousStep()} className="bg-emerald-400 text-white py-3 px-10 rounded-lg mt-4 hover:scale-105 transition-all ease-in-out">Back{" "}</button>
-                <button type="submit" className="bg-emerald-400 text-white py-3 px-10 rounded-lg mt-4 hover:scale-105 transition-all ease-in-out">Submit{" "}</button>
+                <button type="submit" className="bg-emerald-400 text-white py-3 px-10 rounded-lg mt-4 hover:scale-105 transition-all ease-in-out">{loading ? (<span className="animate-pulse">Submitting...</span>) : ("Submit")}</button>
             </div>
         </form>
     )

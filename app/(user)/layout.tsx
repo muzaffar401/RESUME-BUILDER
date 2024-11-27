@@ -1,16 +1,19 @@
-import { auth } from "@/auth";
-import Container from "@/components/Container";
-import Navbar from "@/components/Navbar";
-import { FormProvider } from "@/context/FormContext";
+import { auth } from "@/auth"
+import Container from "@/components/Container"
+import Navbar from "@/components/Navbar"
+import { FormProvider } from "@/context/FormContext"
+import React from "react"
 
 const UserLayout = async ({ children }: { children: React.ReactNode }) => {
-	const session = await auth();
-	return (
-		<FormProvider>
-			<Navbar user={session?.user!} />
-			<Container>{children}</Container>
-		</FormProvider>
-	);
-};
+    const session = await auth();
+    return (
+        <FormProvider>
+            <Navbar user={session?.user!} />
+            <Container>
+                {children}
+            </Container>
+        </FormProvider>
+    )
+}
 
-export default UserLayout;
+export default UserLayout
