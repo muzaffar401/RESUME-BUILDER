@@ -3,3 +3,41 @@
 @tailwind utilities;
 
 
+.loading-container {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .spinner {
+    display: inline-block;
+    height: 2rem; /* 8 * 0.25rem */
+    width: 2rem; /* 8 * 0.25rem */
+    border: 4px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1.5s linear infinite;
+  }
+  
+  .spinner[role="status"] .visually-hidden {
+    position: absolute !important;
+    margin: -1px !important;
+    height: 1px !important;
+    width: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    border: 0 !important;
+    padding: 0 !important;
+    white-space: nowrap !important;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

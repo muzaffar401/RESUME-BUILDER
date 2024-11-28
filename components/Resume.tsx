@@ -9,9 +9,10 @@ import { useReactToPrint } from "react-to-print";
 interface Props {
     template: Template;
     userProfile: JsonValue | null;
+    userSubscription: JsonValue | null;
 }
 
-const Resume = ({ template, userProfile }: Props) => {
+const Resume = ({ template, userProfile, userSubscription }: Props) => {
     console.log(userProfile);
     if (userProfile === undefined) {
         return (
@@ -22,13 +23,25 @@ const Resume = ({ template, userProfile }: Props) => {
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     });
+    let printIt = false
+    if (template.isPaid && userSubscription) {
+        printIt = true;
+    }
+    if (!template.isPaid) {
+        printIt = true;
+    }
     const html = Mustache.render(template.html, userProfile);
     return (<div>
         <div className="flex gap-4 justify-center my-5">
             <Link href={"/"} className="bg-emerald-400 text-white py-3 px-10 rounded-lg mt-4 hover:scale-105 transition-all ease-in-out">Back to templates</Link>
-            <button onClick={handlePrint} className="bg-emerald-400 text-white py-3 px-10 rounded-lg mt-4 hover:scale-105 transition-all ease-in-out">Print</button>
+            {printIt && (
+                <button onClick={handlePrint} className="bg-emerald-400 text-white py-3 px-10 rounded-lg mt-4 hover:scale-105 transition-all ease-in-out">Print</button>
 
+            )}
         </div>
+        {!printIt && (
+                <h1 className="text-2xl mb-4 text-center text-red-500 font-semibold">You are not a paid subscriber in order to print or save this template You have to buy a subscription</h1>
+            )}
         < div dangerouslySetInnerHTML={{ __html: html }} ref={componentRef} />
     </div>
     );

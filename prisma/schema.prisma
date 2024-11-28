@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
   resumeProfile Json         @default("null")
   role          String?
+  subscription  Json?        @default("null")
 }
 
 model Template {
@@ -30,6 +31,13 @@ model Template {
     html          String
     isPaid        Boolean
 }
+
+  model Subscription{
+    id            String          @id @default(cuid())
+    paymentId     String
+    userId        String
+    amount        String
+  }
  
 model Account {
   userId            String

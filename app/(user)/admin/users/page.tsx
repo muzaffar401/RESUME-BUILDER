@@ -1,16 +1,26 @@
 import { auth } from '@/auth'
+import UsersTable from '@/components/UsersTable'
+import { prisma } from '@/prisma/db'
 import React from 'react'
 
 const UsersPage = async() => {
+    const users = await prisma.user.findMany({
+      where:{
+        role:"user"
+      },
+    })
     const session = await auth()
     if(//@ts-ignore
-        !session?.user.role !== "admin"){
+        session?.user.role !== "admin"){
         return <div className="h-screen flex justify-center items-center">
             <h1 className="text-emerald-400 text-5xl">You are not authorized to view this page</h1>
         </div>
     }
   return (
-    <div></div>
+    <div>
+            <h1 className='text-3xl text-emerald-400 font-bold my-6'>Users</h1>
+            <UsersTable users={users}/>
+    </div>
   )
 }
 

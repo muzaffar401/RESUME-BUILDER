@@ -22,11 +22,12 @@ const TemplatePreviewPage = async({params:{id}}:Props) => {
         },
         select:{
             resumeProfile:true,
-        }
+            subscription:true,
+          }
     })
   return (
     <div>
-        <Resume template={template!} userProfile={userProfile?.resumeProfile!}/>
+        <Resume template={template!} userProfile={userProfile?.resumeProfile!} userSubscription={userProfile?.subscription!}/>
     </div>
   )
 }
